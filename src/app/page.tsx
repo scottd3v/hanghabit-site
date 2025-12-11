@@ -221,7 +221,7 @@ export default function Home() {
           className="text-center pt-8 pb-4 border-t"
           style={{ borderColor: "var(--border)" }}
         >
-          <div className="flex justify-center gap-6">
+          <div className="flex justify-center gap-6 mb-6">
             <Link
               href="/privacy"
               className="text-xs transition-colors hover:underline"
@@ -237,6 +237,32 @@ export default function Home() {
               Support
             </Link>
           </div>
+
+          {/* Developer attribution - magical Software Seuss */}
+          <a
+            href="https://scottd3v.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="software-seuss-wrapper"
+          >
+            {/* Sparkles that appear on hover */}
+            <div className="sparkles">
+              <div className="sparkle" />
+              <div className="sparkle" />
+              <div className="sparkle" />
+              <div className="sparkle" />
+              <div className="sparkle" />
+              <div className="sparkle" />
+              <div className="sparkle" />
+            </div>
+            <Image
+              src="/softwareseus.svg"
+              alt="Software Seuss - scottd3v.com"
+              width={120}
+              height={92}
+              className="software-seuss mx-auto"
+            />
+          </a>
         </footer>
       </main>
     </div>
