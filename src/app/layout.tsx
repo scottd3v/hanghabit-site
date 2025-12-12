@@ -1,28 +1,18 @@
 import type { Metadata } from "next";
-import { DM_Sans, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const dmSerif = DM_Serif_Display({
-  variable: "--font-dm-serif",
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hanghabit.com"),
   title: "Hang Habit - Dead Hang Tracker for iOS & Apple Watch",
   description:
     "Decompress your spine. Decompress your life. One minute a day keeps the back pain away.",
+  alternates: {
+    canonical: "https://hanghabit.com",
+  },
   openGraph: {
     title: "Hang Habit",
     description: "Decompress your spine. Decompress your life.",
+    url: "https://hanghabit.com",
     images: [
       {
         url: "/og-hang-habit.png",
@@ -39,6 +29,35 @@ export const metadata: Metadata = {
     description: "Decompress your spine. Decompress your life.",
     images: ["/og-hang-habit.png"],
   },
+  other: {
+    "theme-color": "#0c1220",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://hanghabit.com/#website",
+      url: "https://hanghabit.com",
+      name: "Hang Habit",
+      description: "Dead Hang Tracker for iOS & Apple Watch",
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://hanghabit.com/#app",
+      name: "Hang Habit",
+      description: "Decompress your spine. Decompress your life. One minute a day keeps the back pain away.",
+      applicationCategory: "HealthApplication",
+      operatingSystem: "iOS, watchOS",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+      },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -48,7 +67,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dmSans.variable} ${dmSerif.variable} antialiased`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
+      <body className="antialiased">
         {children}
       </body>
     </html>

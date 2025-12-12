@@ -1,254 +1,586 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 
-// Feature card component
-function FeatureCard({
-  icon,
-  title,
-  description,
+// Zone data for the showcase
+const zones = [
+  { num: 1, name: "Grip", color: "var(--zone-1-grip)", dark: true },
+  { num: 2, name: "Hold", color: "var(--zone-2-hold)", dark: true },
+  { num: 3, name: "Hang", color: "var(--zone-3-hang)", dark: false },
+  { num: 4, name: "Flow", color: "var(--zone-4-flow)", dark: false },
+  { num: 5, name: "Forge", color: "var(--zone-5-forge)", dark: false },
+  { num: 6, name: "Fire", color: "var(--zone-6-fire)", dark: false },
+  { num: 7, name: "Legend", color: "var(--zone-7-legend)", dark: true },
+];
+
+// Features data
+const features = [
+  {
+    icon: "⌚",
+    title: "Just Grab and Hang",
+    description:
+      "Watch detects when you're hanging and starts automatically. No buttons to press while your hands are busy.",
+  },
+  {
+    icon: "🫀",
+    title: "Haptic Coaching",
+    description:
+      "Four modes to keep you going: Pulse, Breathing, Transitions Only, and PR Coach that builds as you approach your record.",
+  },
+  {
+    icon: "🧱",
+    title: "Build Your Wall",
+    description:
+      "Every minute is a brick. Watch your progress stack up day by day, week by week.",
+  },
+  {
+    icon: "🏆",
+    title: "PR Celebration",
+    description:
+      "Tension builds as you approach your record. Beat it and feel the victory. Small wins matter.",
+  },
+  {
+    icon: "📱",
+    title: "No Watch? No Problem",
+    description:
+      "Manual timer on iPhone with Dynamic Island support. The Watch is magic, but not required.",
+  },
+  {
+    icon: "🔒",
+    title: "Your Data Stays Yours",
+    description:
+      "No cloud. No account. No tracking. Everything lives on your device. Privacy by design.",
+  },
+];
+
+// FAQ data
+const faqs = [
+  {
+    question: "What is a dead hang?",
+    answer:
+      "A dead hang is exactly what it sounds like—hang from a bar with your arms fully extended, feet off the ground, and let gravity do its work. It decompresses your spine, strengthens your grip, and improves shoulder mobility. Simple to understand. Harder to hold.",
+  },
+  {
+    question: "How does automatic detection work?",
+    answer:
+      "Your Apple Watch has accelerometers and gyroscopes. When you raise your arms overhead and hold still (like hanging from a bar), the app detects this position and starts timing. When you let go, it stops automatically. No buttons to press while your hands are busy.",
+  },
+  {
+    question: "Do I need an Apple Watch?",
+    answer:
+      "No. The iPhone app has a manual timer mode. But the Watch is where the magic happens—hands-free detection means you just grab the bar and go.",
+  },
+  {
+    question: "What's a good goal to start?",
+    answer:
+      "Start with 5 minutes per week (about 43 seconds per day). Even 30 seconds is an incredible achievement. The point is consistency—hang for 31 seconds tomorrow.",
+  },
+  {
+    question: "Is it really free?",
+    answer:
+      "Yes. No ads, no subscriptions, no premium features. I built this for myself and my family. Now it's yours.",
+  },
+  {
+    question: "What about my data?",
+    answer:
+      "Your data stays on your device. No cloud sync. No account required. No tracking or analytics. Privacy by design.",
+  },
+];
+
+// FAQ Item component
+function FAQItem({
+  question,
+  answer,
+  isOpen,
+  onClick,
 }: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
+  question: string;
+  answer: string;
+  isOpen: boolean;
+  onClick: () => void;
 }) {
   return (
-    <div className="glass p-4">
-      <div className="text-2xl mb-2">{icon}</div>
-      <h3
-        className="font-semibold text-sm mb-1"
-        style={{ color: "var(--text-primary)" }}
-      >
-        {title}
-      </h3>
-      <p
-        className="text-xs leading-relaxed"
-        style={{ color: "var(--text-secondary)" }}
-      >
-        {description}
-      </p>
+    <div className={`faq-item ${isOpen ? "open" : ""}`}>
+      <button className="faq-question" onClick={onClick}>
+        <span>{question}</span>
+        <span className="faq-icon">+</span>
+      </button>
+      <div className="faq-answer">{answer}</div>
+    </div>
+  );
+}
+
+// Zone bar component
+function ZoneBar() {
+  return (
+    <div className="zone-bar">
+      {zones.map((zone) => (
+        <div
+          key={zone.num}
+          className="segment"
+          style={{ background: zone.color }}
+        />
+      ))}
     </div>
   );
 }
 
 export default function Home() {
+  const [openFAQ, setOpenFAQ] = useState<number>(0);
+
   return (
-    <div className="min-h-screen" style={{ background: "var(--background)" }}>
-      <main className="px-6 pb-8 max-w-3xl mx-auto">
-        {/* ===== 1) HERO SECTION ===== */}
-        <section className="text-center pt-12 pb-16">
-          {/* App Icon */}
-          <div className="flex justify-center mb-4">
-            <Image
-              src="/hang-habit-icon-180.png"
-              alt="Hang Habit app icon"
-              width={100}
-              height={100}
-              className="rounded-2xl shadow-lg"
-            />
-          </div>
+    <div style={{ background: "var(--bg)" }}>
+      {/* ===== NAVIGATION ===== */}
+      <nav className="nav">
+        <Link href="/" className="nav-logo">
+          Hang Habit
+        </Link>
+        <div className="nav-links">
+          <Link href="#features">Features</Link>
+          <Link href="#faq">FAQ</Link>
+          <span className="btn-primary-sm">Coming Soon</span>
+        </div>
+      </nav>
 
-          {/* Title */}
-          <h1
-            className="text-lg font-medium mb-4"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Hang Habit for iOS & Apple Watch
-          </h1>
-
-          {/* Hook */}
-          <p className="text-lg italic" style={{ color: "var(--accent-coral)" }}>
-            One minute a day keeps the back pain away.
-          </p>
-        </section>
-
-        {/* ===== 2) BACKSTORY SECTION ===== */}
-        <section className="mb-12">
-          <h2
-            className="text-sm font-semibold uppercase tracking-wide mb-3"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Why this app exists
-          </h2>
-          <p
-            className="text-base leading-relaxed mb-4"
-            style={{ color: "var(--text-primary)" }}
-          >
-            In college, I was hit by a car on my Honda Spree. My back took damage
-            I wouldn&apos;t feel for years. Not until I had three kids who wanted
-            to climb all over me. The days I hang for a minute or more, I feel
-            better. I move better. I can be there for them.
-          </p>
-          <p
-            className="text-xl font-bold"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Decompress your spine.{" "}
-            <span style={{ color: "var(--accent-teal)" }}>
-              Decompress your life.
-            </span>
-          </p>
-        </section>
-
-        {/* ===== MAXIMIZE YOUR MINUTE ===== */}
-        <section className="mb-12">
-          <p
-            className="text-base leading-relaxed"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            If you only have a minute to work out, make it count. Dead hangs are
-            one of the best exercises for spinal decompression. No gym. No
-            equipment. Just you and something to hang from.
-          </p>
-        </section>
-
-        {/* ===== 3) FEATURES GRID ===== */}
-        <section className="mb-12">
-          <h2
-            className="text-lg font-semibold mb-4"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Built for busy parents (and everyone else)
-          </h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <FeatureCard
-              icon={<span>&#x231A;</span>}
-              title="Just Grab and Hang"
-              description="Watch detects hanging and starts automatically. No buttons needed."
-            />
-            <FeatureCard
-              icon={<span>&#x1FAC0;</span>}
-              title="Haptic Coaching"
-              description="Four modes: Gentle, Heartbeat, Coach, and Drummer."
-            />
-            <FeatureCard
-              icon={<span>&#x1F9F1;</span>}
-              title="Build Your Wall"
-              description="Every minute is a brick. Watch your progress stack up."
-            />
-            <FeatureCard
-              icon={<span>&#x1F3C6;</span>}
-              title="PR Celebration"
-              description="Tension builds as you approach your record. Beat it and celebrate."
-            />
-            <FeatureCard
-              icon={<span>&#x1F4F1;</span>}
-              title="No Watch? No Problem"
-              description="Manual timer on iPhone. Dynamic Island support."
-            />
-            <FeatureCard
-              icon={<span>&#x1F932;</span>}
-              title="Track Your Grip"
-              description="Log grip types: dead hang, half crimp, full crimp, open hand."
-            />
-          </div>
-        </section>
-
-        {/* ===== 4) APP STORE CTA ===== */}
-        <section className="text-center py-10 mb-12">
-          <h2
-            className="text-lg font-semibold mb-4"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Coming soon on the App Store
-          </h2>
-          <div className="glass inline-flex items-center gap-3 px-5 py-3">
-            <svg
-              className="w-8 h-8"
-              style={{ color: "var(--text-primary)" }}
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-            </svg>
-            <span
-              className="font-medium"
-              style={{ color: "var(--text-primary)" }}
-            >
-              App Store
-            </span>
-          </div>
-        </section>
-
-        {/* ===== 5) POEM SECTION ===== */}
-        <section className="text-center mb-12">
-          {/* Family Illustration */}
-          <Image
-            src="/family.svg"
-            alt="Illustration of a dad hanging from a bar with three kids below"
-            width={300}
-            height={225}
-            className="w-full max-w-[200px] mx-auto mb-6 opacity-90"
-          />
-
-          <h2
-            className="text-sm font-semibold uppercase tracking-wide mb-4"
-            style={{ color: "var(--text-muted)" }}
-          >
-            For my kids
-          </h2>
-
-          <div
-            className="text-base md:text-lg leading-snug italic space-y-1"
-            style={{ color: "var(--accent-teal)" }}
-          >
-            <p>A five and a four and a baby makes three.</p>
-            <p>They climb and they pull and they hang onto me.</p>
-            <p>So I hang every day, decompress head to toe,</p>
-            <p>So I&apos;m ready to play wherever they go.</p>
-          </div>
-
-          <div
-            className="text-base md:text-lg leading-snug italic space-y-1 mt-6"
-            style={{ color: "var(--accent-coral)" }}
-          >
-            <p>A bar, a branch, a doorframe will do.</p>
-            <p>A playground, a beam, there&apos;s always a view.</p>
-            <p>You can hang in the morning, you can hang in the night.</p>
-            <p>You can hang for a minute and you&apos;ll feel just right.</p>
-          </div>
-
-          <p
-            className="text-lg font-semibold mt-8"
-            style={{ color: "var(--text-primary)" }}
-          >
-            I hang for them so I can hang with them.
-          </p>
-        </section>
-
-        {/* ===== 6) FOOTER LINKS ===== */}
-        <footer
-          className="text-center pt-8 pb-4 border-t"
-          style={{ borderColor: "var(--border)" }}
+      {/* ===== HERO ===== */}
+      <section className="min-h-screen flex flex-col justify-center items-center text-center pt-24 px-6 md:px-10">
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 max-w-4xl">
+          A little <span style={{ color: "var(--gold)" }}>hang</span> goes a
+          long way.
+        </h1>
+        <p
+          className="text-lg md:text-xl max-w-xl mb-10 leading-relaxed"
+          style={{ color: "var(--text-secondary)" }}
         >
-          <div className="flex justify-center gap-6 mb-6">
+          A minute a day keeps the back pain away.
+        </p>
+        <span className="btn-primary cursor-default">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.79 22.05 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z" />
+          </svg>
+          Coming Soon
+        </span>
+        <p className="mt-4 text-sm" style={{ color: "var(--text-tertiary)" }}>
+          iPhone & Apple Watch
+        </p>
+
+        {/* Device Mockups */}
+        <div className="flex flex-col md:flex-row justify-center items-center gap-6 mt-16">
+          <div className="phone-mockup">[iPhone Screenshot]</div>
+          <div className="watch-mockup">[Watch Screenshot]</div>
+        </div>
+      </section>
+
+      {/* ===== TRUTH SECTION ===== */}
+      <section className="py-24 md:py-32 px-6 md:px-10 max-w-6xl mx-auto text-center">
+        <p className="section-label">The Truth</p>
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold max-w-3xl mx-auto mb-16 leading-snug">
+          It looks simple. Hang from a bar. But try holding on for 60 seconds.
+          Most people can&apos;t.
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Card 1 */}
+          <div
+            className="surface p-8 text-left relative overflow-hidden"
+            style={{
+              borderTop: "3px solid transparent",
+              borderImage:
+                "linear-gradient(90deg, var(--zone-1-grip), var(--zone-3-hang)) 1",
+            }}
+          >
+            <h3
+              className="text-lg font-semibold mb-2"
+              style={{ color: "var(--zone-3-hang)" }}
+            >
+              Harder than you think
+            </h3>
+            <p
+              className="text-sm leading-relaxed"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              Your grip gives out. Your shoulders burn. Your mind tells you to
+              let go. That&apos;s the point.
+            </p>
+          </div>
+
+          {/* Card 2 */}
+          <div
+            className="surface p-8 text-left relative overflow-hidden"
+            style={{
+              borderTop: "3px solid transparent",
+              borderImage:
+                "linear-gradient(90deg, var(--zone-3-hang), var(--zone-5-forge)) 1",
+            }}
+          >
+            <h3
+              className="text-lg font-semibold mb-2"
+              style={{ color: "var(--zone-4-flow)" }}
+            >
+              Worth every second
+            </h3>
+            <p
+              className="text-sm leading-relaxed"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              Decompress your spine. Build grip strength. Improve shoulder
+              mobility. In one simple movement.
+            </p>
+          </div>
+
+          {/* Card 3 */}
+          <div
+            className="surface p-8 text-left relative overflow-hidden"
+            style={{
+              borderTop: "3px solid transparent",
+              borderImage:
+                "linear-gradient(90deg, var(--zone-5-forge), var(--zone-7-legend)) 1",
+            }}
+          >
+            <h3
+              className="text-lg font-semibold mb-2"
+              style={{ color: "var(--zone-7-legend)" }}
+            >
+              Rewarding to track
+            </h3>
+            <p
+              className="text-sm leading-relaxed"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              Watch your time grow. Beat your average. Chase your PR. Small wins
+              compound into real change.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== STORY SECTION ===== */}
+      <section className="py-24 md:py-32 px-6 md:px-10 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
+              Why this app exists
+            </h2>
+            <p
+              className="text-lg leading-relaxed mb-5"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              In college, I was hit by a car on my Honda Spree. My back took
+              damage I wouldn&apos;t feel for years.
+            </p>
+            <p
+              className="text-lg leading-relaxed mb-5"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              Not until I had three kids who wanted to climb all over me. The
+              days I hang for a minute or more,{" "}
+              <span style={{ color: "var(--gold)" }} className="font-medium">
+                I feel better. I move better. I can be there for them.
+              </span>
+            </p>
+            <p
+              className="text-lg leading-relaxed"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              This app is how I stay accountable. Now it&apos;s yours too.
+            </p>
+          </div>
+          <div
+            className="h-80 lg:h-[500px] rounded-3xl flex items-center justify-center relative overflow-hidden"
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+            }}
+          >
+            <span style={{ color: "var(--text-tertiary)" }}>
+              [Photo placeholder]
+            </span>
+            {/* Zone gradient at bottom */}
+            <div
+              className="absolute bottom-0 left-0 right-0 h-1"
+              style={{
+                background: `linear-gradient(90deg,
+                  var(--zone-1-grip),
+                  var(--zone-2-hold),
+                  var(--zone-3-hang),
+                  var(--zone-4-flow),
+                  var(--zone-5-forge),
+                  var(--zone-6-fire),
+                  var(--zone-7-legend)
+                )`,
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ===== ZONES SHOWCASE ===== */}
+      <section className="py-24 md:py-32 px-6 md:px-10 text-center">
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+          Progress you can feel
+        </h2>
+        <p
+          className="text-lg mb-12"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          Seven zones from first grip to legend status. Watch your progress bar
+          light up.
+        </p>
+
+        <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8">
+          {zones.map((zone) => (
+            <div
+              key={zone.num}
+              className={`zone-block ${zone.dark ? "zone-block-dark" : ""}`}
+              style={{ background: zone.color }}
+            >
+              <span className="zone-num">{zone.num}</span>
+              <span className="zone-name">{zone.name}</span>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>
+          <span style={{ color: "var(--gold)" }}>Gold is earned.</span> Reach
+          Zone 4 and you&apos;ve hit the sweet spot.
+        </p>
+      </section>
+
+      {/* ===== FEATURES ===== */}
+      <section
+        id="features"
+        className="py-24 md:py-32 px-6 md:px-10 max-w-6xl mx-auto text-center"
+      >
+        <p className="section-label">Built for Busy People</p>
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-16">
+          No gym. No equipment. Just you.
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {features.map((feature, i) => (
+            <div key={i} className="feature-card">
+              <div className="text-3xl mb-4">{feature.icon}</div>
+              <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== CHALLENGE ===== */}
+      <section className="py-24 md:py-32 px-6 md:px-10">
+        <div
+          className="max-w-5xl mx-auto rounded-3xl p-12 md:p-20 text-center relative overflow-hidden"
+          style={{
+            background: "var(--surface)",
+            border: "1px solid var(--border)",
+          }}
+        >
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 leading-snug">
+            Can&apos;t find something to hang on?
+          </h2>
+          <p
+            className="text-lg max-w-2xl mx-auto mb-10 leading-relaxed"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            That&apos;s a heck of an excuse, but I&apos;m not buying it. A tree.
+            A basketball hoop. A door frame. A ledge. A playground. There&apos;s
+            always something. Your health is your wealth.
+          </p>
+
+          <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 mt-12">
+            <div className="text-center">
+              <div
+                className="text-5xl font-bold"
+                style={{ color: "var(--zone-3-hang)" }}
+              >
+                30s
+              </div>
+              <div
+                className="text-sm mt-2"
+                style={{ color: "var(--text-tertiary)" }}
+              >
+                is incredible
+              </div>
+            </div>
+            <div className="text-center">
+              <div
+                className="text-5xl font-bold"
+                style={{ color: "var(--zone-5-forge)" }}
+              >
+                60s
+              </div>
+              <div
+                className="text-sm mt-2"
+                style={{ color: "var(--text-tertiary)" }}
+              >
+                is a real challenge
+              </div>
+            </div>
+            <div className="text-center">
+              <div
+                className="text-5xl font-bold"
+                style={{ color: "var(--zone-7-legend)" }}
+              >
+                2min
+              </div>
+              <div
+                className="text-sm mt-2"
+                style={{ color: "var(--text-tertiary)" }}
+              >
+                you&apos;re a legend
+              </div>
+            </div>
+          </div>
+
+          {/* Zone gradient at bottom */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-1"
+            style={{
+              background: `linear-gradient(90deg,
+                var(--zone-1-grip),
+                var(--zone-2-hold),
+                var(--zone-3-hang),
+                var(--zone-4-flow),
+                var(--zone-5-forge),
+                var(--zone-6-fire),
+                var(--zone-7-legend)
+              )`,
+            }}
+          />
+        </div>
+      </section>
+
+      {/* ===== POEM ===== */}
+      <section className="py-32 md:py-40 px-6 md:px-10 text-center">
+        {/* Family Illustration */}
+        <Image
+          src="/family.svg"
+          alt="Illustration of a dad hanging from a bar with three kids below"
+          width={300}
+          height={225}
+          className="w-full max-w-[200px] mx-auto mb-10 opacity-80"
+        />
+
+        <p className="section-label">For My Kids</p>
+        <div
+          className="text-lg md:text-xl leading-loose max-w-xl mx-auto italic"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          <p>A five and a four and a baby makes three.</p>
+          <p>They climb and they pull and they hang onto me.</p>
+          <p>So I hang every day, decompress head to toe,</p>
+          <p>So I&apos;m ready to play wherever they go.</p>
+          <br />
+          <p>A bar, a branch, a doorframe will do.</p>
+          <p>A playground, a beam, there&apos;s always a view.</p>
+          <p>You can hang in the morning, you can hang in the night.</p>
+          <p>You can hang for a minute and you&apos;ll feel just right.</p>
+        </div>
+        <p
+          className="text-xl md:text-2xl font-semibold mt-12"
+          style={{ color: "var(--gold)" }}
+        >
+          I hang for them so I can hang with them.
+        </p>
+      </section>
+
+      {/* ===== FAQ ===== */}
+      <section
+        id="faq"
+        className="py-24 md:py-32 px-6 md:px-10 max-w-3xl mx-auto"
+      >
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
+          Frequently Asked
+        </h2>
+
+        {faqs.map((faq, i) => (
+          <FAQItem
+            key={i}
+            question={faq.question}
+            answer={faq.answer}
+            isOpen={openFAQ === i}
+            onClick={() => setOpenFAQ(openFAQ === i ? -1 : i)}
+          />
+        ))}
+      </section>
+
+      {/* ===== FINAL CTA ===== */}
+      <section className="py-32 md:py-40 px-6 md:px-10 text-center">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+          Ready to hang?
+        </h2>
+        <p
+          className="text-lg md:text-xl mb-10"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          Decompress your spine. Decompress your life.
+        </p>
+        <span className="btn-primary cursor-default">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.79 22.05 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z" />
+          </svg>
+          Coming Soon
+        </span>
+      </section>
+
+      {/* ===== FOOTER ===== */}
+      <footer
+        className="px-6 md:px-10 py-10 max-w-6xl mx-auto"
+        style={{ borderTop: "1px solid var(--border)" }}
+      >
+        <div className="mb-8">
+          <ZoneBar />
+        </div>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+          <div>
+            <p
+              className="text-sm"
+              style={{ color: "var(--text-tertiary)" }}
+            >
+              © 2025 Hang Habit
+            </p>
+            <p
+              className="text-sm italic mt-1"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              Decompress your spine. Decompress your life.
+            </p>
+          </div>
+          <div className="flex items-center gap-6">
             <Link
               href="/privacy"
-              className="text-xs transition-colors hover:underline"
-              style={{ color: "var(--text-muted)" }}
+              className="text-sm transition-colors hover:text-white"
+              style={{ color: "var(--text-tertiary)" }}
             >
-              Privacy Policy
+              Privacy
             </Link>
             <Link
               href="/support"
-              className="text-xs transition-colors hover:underline"
-              style={{ color: "var(--text-muted)" }}
+              className="text-sm transition-colors hover:text-white"
+              style={{ color: "var(--text-tertiary)" }}
             >
               Support
             </Link>
           </div>
+        </div>
 
-          {/* Developer attribution - magical Software Seuss */}
+        {/* Software Seuss Easter Egg */}
+        <div className="mt-10 flex justify-center">
           <a
             href="https://scottd3v.com"
             target="_blank"
             rel="noopener noreferrer"
             className="software-seuss-wrapper"
           >
-            {/* Sparkles that appear on hover */}
             <div className="sparkles">
-              <div className="sparkle" />
-              <div className="sparkle" />
               <div className="sparkle" />
               <div className="sparkle" />
               <div className="sparkle" />
@@ -257,14 +589,14 @@ export default function Home() {
             </div>
             <Image
               src="/softwareseus.svg"
-              alt="Software Seuss - scottd3v.com"
-              width={120}
-              height={92}
-              className="software-seuss mx-auto"
+              alt="Software Seuss"
+              width={80}
+              height={61}
+              className="software-seuss"
             />
           </a>
-        </footer>
-      </main>
+        </div>
+      </footer>
     </div>
   );
 }

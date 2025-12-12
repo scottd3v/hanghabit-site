@@ -1,0 +1,5 @@
+# robots.txt for hanghabit.com
+User-agent: *
+Allow: /
+
+Sitemap: https://hanghabit.com/sitemap.xml

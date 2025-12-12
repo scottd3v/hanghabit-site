@@ -7,12 +7,12 @@ export const metadata = {
 
 export default function Privacy() {
   return (
-    <div className="min-h-screen" style={{ background: "var(--background)" }}>
+    <div style={{ background: "var(--bg)" }} className="min-h-screen">
       {/* Header */}
-      <header className="px-6 pt-8 pb-4">
+      <header className="px-6 md:px-10 pt-8 pb-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 transition-colors"
+          className="inline-flex items-center gap-2 transition-colors hover:text-white"
           style={{ color: "var(--text-secondary)" }}
         >
           <svg
@@ -32,26 +32,21 @@ export default function Privacy() {
         </Link>
       </header>
 
-      <main className="px-6 pb-12">
+      <main className="px-6 md:px-10 pb-16">
         <div className="max-w-2xl">
-          <h1
-            className="text-3xl font-bold mb-6"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Privacy Policy
-          </h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-8">Privacy Policy</h1>
 
-          <div className="space-y-6" style={{ color: "var(--text-secondary)" }}>
-            <p className="leading-relaxed">
+          <div
+            className="space-y-8"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            <p className="text-lg leading-relaxed">
               Hang Habit is designed with your privacy in mind. We believe your
               health and fitness data belongs to you alone.
             </p>
 
             <section>
-              <h2
-                className="text-lg font-semibold mb-2"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <h2 className="text-xl font-semibold mb-3 text-white">
                 Data Storage
               </h2>
               <p className="leading-relaxed">
@@ -63,10 +58,7 @@ export default function Privacy() {
             </section>
 
             <section>
-              <h2
-                className="text-lg font-semibold mb-2"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <h2 className="text-xl font-semibold mb-3 text-white">
                 No Analytics or Tracking
               </h2>
               <p className="leading-relaxed">
@@ -78,10 +70,7 @@ export default function Privacy() {
             </section>
 
             <section>
-              <h2
-                className="text-lg font-semibold mb-2"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <h2 className="text-xl font-semibold mb-3 text-white">
                 HealthKit Integration
               </h2>
               <p className="leading-relaxed">
@@ -94,10 +83,7 @@ export default function Privacy() {
             </section>
 
             <section>
-              <h2
-                className="text-lg font-semibold mb-2"
-                style={{ color: "var(--text-primary)" }}
-              >
+              <h2 className="text-xl font-semibold mb-3 text-white">
                 No Account Required
               </h2>
               <p className="leading-relaxed">
@@ -107,18 +93,13 @@ export default function Privacy() {
             </section>
 
             <section>
-              <h2
-                className="text-lg font-semibold mb-2"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Contact
-              </h2>
+              <h2 className="text-xl font-semibold mb-3 text-white">Contact</h2>
               <p className="leading-relaxed">
                 If you have any questions about this privacy policy, please
                 contact us at{" "}
                 <a
                   href="mailto:hello@hanghabit.com"
-                  style={{ color: "var(--accent-teal)" }}
+                  style={{ color: "var(--gold)" }}
                   className="hover:underline"
                 >
                   hello@hanghabit.com
@@ -128,7 +109,7 @@ export default function Privacy() {
 
             <p
               className="text-sm pt-4"
-              style={{ color: "var(--text-muted)" }}
+              style={{ color: "var(--text-tertiary)" }}
             >
               Last updated: December 2024
             </p>
