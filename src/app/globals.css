@@ -340,6 +340,8 @@ body {
 .sparkle:nth-child(3) { top: 15%; right: 10%; animation-delay: 0.4s; }
 .sparkle:nth-child(4) { bottom: 20%; left: 0; animation-delay: 0.6s; }
 .sparkle:nth-child(5) { bottom: 10%; right: 5%; animation-delay: 0.8s; }
+.sparkle:nth-child(6) { top: 50%; left: -5%; animation-delay: 1s; }
+.sparkle:nth-child(7) { top: 40%; right: -5%; animation-delay: 1.2s; }
 
 @keyframes sparklePop {
   0% {
@@ -383,5 +385,241 @@ body {
   .watch-mockup {
     width: 150px;
     height: 180px;
+  }
+}
+
+/* ===== Poem Easter Egg Modal ===== */
+.poem-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.poem-overlay-visible {
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px);
+}
+
+.poem-container {
+  position: relative;
+  max-width: 440px;
+  width: calc(100% - 2rem);
+  padding: 2rem 1.5rem 2.5rem;
+  border-radius: 24px;
+  background: linear-gradient(
+    145deg,
+    rgba(218, 185, 130, 0.08),
+    rgba(155, 80, 165, 0.06)
+  );
+  border: 1px solid var(--border);
+  box-shadow:
+    0 0 60px rgba(218, 185, 130, 0.15),
+    0 0 120px rgba(155, 80, 165, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: scale(0.8) translateY(20px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+
+.poem-container-visible {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* Swipe indicator pill */
+.swipe-indicator {
+  width: 36px;
+  height: 4px;
+  background: var(--text-tertiary);
+  border-radius: 2px;
+  margin: 0 auto 1rem;
+  opacity: 0.5;
+}
+
+/* Close button */
+.poem-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.375rem;
+  color: var(--text-tertiary);
+  transition: color 0.2s ease, transform 0.2s ease;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.poem-close:hover {
+  color: var(--text);
+  transform: rotate(90deg);
+}
+
+.poem-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Poem content */
+.poem-content {
+  position: relative;
+  z-index: 1;
+}
+
+.poem-stanza {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.poem-stanza:last-of-type {
+  margin-bottom: 0;
+}
+
+.poem-stanza-1 {
+  color: var(--gold);
+}
+
+.poem-stanza-2 {
+  color: var(--zone-6-fire);
+}
+
+/* Poem line styling for typewriter */
+.poem-line {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  font-style: italic;
+  margin: 0;
+  padding: 0.2rem 0;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* Typewriter cursor */
+.typewriter-cursor {
+  display: inline-block;
+  color: var(--gold);
+  animation: cursorBlink 0.6s ease infinite;
+  margin-left: 1px;
+}
+
+@keyframes cursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Tagline at bottom - hidden until poem completes */
+.poem-tagline {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.poem-tagline-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Hint text */
+.poem-hint {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  opacity: 0;
+  animation: fadeInHint 0.5s ease forwards;
+  animation-delay: 1.5s;
+}
+
+@keyframes fadeInHint {
+  to {
+    opacity: 0.6;
+  }
+}
+
+/* Particle burst */
+.burst-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particleBurst 1.2s ease-out forwards;
+  z-index: 201;
+}
+
+@keyframes particleBurst {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(-50% + var(--random-x, 0px)),
+      calc(-50% + var(--random-y, 0px))
+    ) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Randomize particle directions */
+.burst-particle:nth-child(1) { --random-x: -80px; --random-y: -120px; }
+.burst-particle:nth-child(2) { --random-x: 90px; --random-y: -100px; }
+.burst-particle:nth-child(3) { --random-x: -60px; --random-y: 110px; }
+.burst-particle:nth-child(4) { --random-x: 100px; --random-y: 80px; }
+.burst-particle:nth-child(5) { --random-x: -120px; --random-y: -40px; }
+.burst-particle:nth-child(6) { --random-x: 70px; --random-y: -130px; }
+.burst-particle:nth-child(7) { --random-x: -100px; --random-y: 60px; }
+.burst-particle:nth-child(8) { --random-x: 110px; --random-y: -60px; }
+.burst-particle:nth-child(9) { --random-x: -40px; --random-y: 130px; }
+.burst-particle:nth-child(10) { --random-x: 130px; --random-y: 40px; }
+.burst-particle:nth-child(11) { --random-x: -130px; --random-y: -80px; }
+.burst-particle:nth-child(12) { --random-x: 50px; --random-y: 120px; }
+.burst-particle:nth-child(13) { --random-x: -90px; --random-y: -110px; }
+.burst-particle:nth-child(14) { --random-x: 80px; --random-y: 100px; }
+.burst-particle:nth-child(15) { --random-x: -110px; --random-y: 30px; }
+.burst-particle:nth-child(16) { --random-x: 40px; --random-y: -90px; }
+.burst-particle:nth-child(17) { --random-x: -70px; --random-y: 80px; }
+.burst-particle:nth-child(18) { --random-x: 120px; --random-y: -30px; }
+.burst-particle:nth-child(19) { --random-x: -50px; --random-y: -100px; }
+.burst-particle:nth-child(20) { --random-x: 60px; --random-y: 90px; }
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+  .poem-container {
+    padding: 1.5rem 1rem 2rem;
+    margin: 0.5rem;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .poem-content {
+    padding: 0 0.25rem;
+  }
+
+  .poem-line {
+    font-size: 0.8rem;
+    line-height: 1.6;
+  }
+
+  .swipe-indicator {
+    margin-bottom: 0.75rem;
   }
 }

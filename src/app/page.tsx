@@ -2,7 +2,52 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+
+// Typewriter component for poem lines
+function TypewriterLine({
+  text,
+  delay = 0,
+  speed = 30,
+  className = "",
+  onComplete,
+}: {
+  text: string;
+  delay?: number;
+  speed?: number;
+  className?: string;
+  onComplete?: () => void;
+}) {
+  const [displayedText, setDisplayedText] = useState("");
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const startTimer = setTimeout(() => setStarted(true), delay);
+    return () => clearTimeout(startTimer);
+  }, [delay]);
+
+  useEffect(() => {
+    if (!started) return;
+
+    if (displayedText.length < text.length) {
+      const timer = setTimeout(() => {
+        setDisplayedText(text.slice(0, displayedText.length + 1));
+      }, speed);
+      return () => clearTimeout(timer);
+    } else if (onComplete) {
+      onComplete();
+    }
+  }, [started, displayedText, text, speed, onComplete]);
+
+  return (
+    <p className={className} style={{ minHeight: "1.6em" }}>
+      {displayedText}
+      {started && displayedText.length < text.length && (
+        <span className="typewriter-cursor">|</span>
+      )}
+    </p>
+  );
+}
 
 // Zone data for the showcase
 const zones = [
@@ -60,7 +105,7 @@ const faqs = [
   {
     question: "What is a dead hang?",
     answer:
-      "A dead hang is exactly what it sounds like—hang from a bar with your arms fully extended, feet off the ground, and let gravity do its work. It decompresses your spine, strengthens your grip, and improves shoulder mobility. Simple to understand. Harder to hold.",
+      "A dead hang is exactly what it sounds like: hang from a bar with your arms fully extended, feet off the ground, and let gravity do its work. It decompresses your spine, strengthens your grip, and improves shoulder mobility. Simple to understand. Harder to hold.",
   },
   {
     question: "How does automatic detection work?",
@@ -70,12 +115,12 @@ const faqs = [
   {
     question: "Do I need an Apple Watch?",
     answer:
-      "No. The iPhone app has a manual timer mode. But the Watch is where the magic happens—hands-free detection means you just grab the bar and go.",
+      "No. The iPhone app has a manual timer mode. But the Watch is where the magic happens. Hands-free detection means you just grab the bar and go.",
   },
   {
     question: "What's a good goal to start?",
     answer:
-      "Start with 5 minutes per week (about 43 seconds per day). Even 30 seconds is an incredible achievement. The point is consistency—hang for 31 seconds tomorrow.",
+      "Start with 5 minutes per week (about 43 seconds per day). Even 30 seconds is an incredible achievement. The point is consistency. Hang for 31 seconds tomorrow.",
   },
   {
     question: "Is it really free?",
@@ -129,6 +174,82 @@ function ZoneBar() {
 
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number>(0);
+  const [showPoem, setShowPoem] = useState(false);
+  const [poemAnimating, setPoemAnimating] = useState(false);
+  const [particles, setParticles] = useState<
+    Array<{ id: number; x: number; y: number; color: string }>
+  >([]);
+  const [swipeY, setSwipeY] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
+  const [poemComplete, setPoemComplete] = useState(false);
+  const touchStartY = useRef(0);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Lock body scroll when poem is shown
+  useEffect(() => {
+    if (showPoem) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showPoem]);
+
+  // Create particle burst
+  const createParticleBurst = useCallback(() => {
+    const colors = ["var(--zone-6-fire)", "var(--zone-4-flow)", "#ffffff"];
+    const newParticles = Array.from({ length: 20 }, (_, i) => ({
+      id: Date.now() + i,
+      x: 50 + (Math.random() - 0.5) * 30,
+      y: 50 + (Math.random() - 0.5) * 30,
+      color: colors[Math.floor(Math.random() * colors.length)],
+    }));
+    setParticles(newParticles);
+    setTimeout(() => setParticles([]), 1500);
+  }, []);
+
+  const handlePoemOpen = () => {
+    setShowPoem(true);
+    setPoemAnimating(true);
+    setPoemComplete(false);
+    createParticleBurst();
+  };
+
+  const handlePoemComplete = useCallback(() => {
+    setPoemComplete(true);
+  }, []);
+
+  const handlePoemClose = useCallback(() => {
+    setPoemAnimating(false);
+    setSwipeY(0);
+    setIsSwiping(false);
+    setTimeout(() => setShowPoem(false), 300);
+  }, []);
+
+  // Swipe handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+    setIsSwiping(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isSwiping) return;
+    const deltaY = e.touches[0].clientY - touchStartY.current;
+    if (deltaY > 0) {
+      setSwipeY(deltaY);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (swipeY > 100) {
+      handlePoemClose();
+    } else {
+      setSwipeY(0);
+    }
+    setIsSwiping(false);
+  };
 
   return (
     <div style={{ background: "var(--bg)" }}>
@@ -461,40 +582,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== POEM ===== */}
-      <section className="py-32 md:py-40 px-6 md:px-10 text-center">
-        {/* Family Illustration */}
-        <Image
-          src="/family.svg"
-          alt="Illustration of a dad hanging from a bar with three kids below"
-          width={300}
-          height={225}
-          className="w-full max-w-[200px] mx-auto mb-10 opacity-80"
-        />
-
-        <p className="section-label">For My Kids</p>
-        <div
-          className="text-lg md:text-xl leading-loose max-w-xl mx-auto italic"
-          style={{ color: "var(--text-secondary)" }}
-        >
-          <p>A five and a four and a baby makes three.</p>
-          <p>They climb and they pull and they hang onto me.</p>
-          <p>So I hang every day, decompress head to toe,</p>
-          <p>So I&apos;m ready to play wherever they go.</p>
-          <br />
-          <p>A bar, a branch, a doorframe will do.</p>
-          <p>A playground, a beam, there&apos;s always a view.</p>
-          <p>You can hang in the morning, you can hang in the night.</p>
-          <p>You can hang for a minute and you&apos;ll feel just right.</p>
-        </div>
-        <p
-          className="text-xl md:text-2xl font-semibold mt-12"
-          style={{ color: "var(--gold)" }}
-        >
-          I hang for them so I can hang with them.
-        </p>
-      </section>
-
       {/* ===== FAQ ===== */}
       <section
         id="faq"
@@ -577,13 +664,15 @@ export default function Home() {
 
         {/* Software Seuss Easter Egg */}
         <div className="mt-10 flex justify-center">
-          <a
-            href="https://scottd3v.com"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={handlePoemOpen}
             className="software-seuss-wrapper"
+            aria-label="Reveal poem"
+            type="button"
           >
             <div className="sparkles">
+              <div className="sparkle" />
+              <div className="sparkle" />
               <div className="sparkle" />
               <div className="sparkle" />
               <div className="sparkle" />
@@ -593,13 +682,153 @@ export default function Home() {
             <Image
               src="/softwareseus.svg"
               alt="Software Seuss"
-              width={80}
-              height={61}
+              width={100}
+              height={77}
               className="software-seuss"
             />
-          </a>
+          </button>
         </div>
       </footer>
+
+      {/* ===== POEM EASTER EGG MODAL ===== */}
+      {showPoem && (
+        <div
+          className={`poem-overlay ${poemAnimating ? "poem-overlay-visible" : ""}`}
+          onClick={handlePoemClose}
+          style={{ opacity: Math.max(0.3, 1 - swipeY / 300) }}
+        >
+          {/* Particle burst on open */}
+          {particles.map((particle) => (
+            <div
+              key={particle.id}
+              className="burst-particle"
+              style={{
+                left: `${particle.x}%`,
+                top: `${particle.y}%`,
+                backgroundColor: particle.color,
+              }}
+            />
+          ))}
+
+          <div
+            ref={modalRef}
+            className={`poem-container ${poemAnimating ? "poem-container-visible" : ""} ${poemComplete ? "poem-complete" : ""}`}
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{
+              transform: `translateY(${swipeY}px) scale(${1 - swipeY / 1000})`,
+              transition: isSwiping ? "none" : undefined,
+            }}
+          >
+            {/* Swipe indicator */}
+            <div className="swipe-indicator" />
+
+            {/* Close button */}
+            <button
+              onClick={handlePoemClose}
+              className="poem-close"
+              aria-label="Close poem"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Family illustration */}
+            <Image
+              src="/family.svg"
+              alt="Dad hanging with kids"
+              width={120}
+              height={90}
+              className="mx-auto mb-4 opacity-70"
+            />
+
+            {/* Poem content with typewriter effect */}
+            <div className="poem-content">
+              <p
+                className="text-xs uppercase tracking-widest mb-4 text-center"
+                style={{ color: "var(--text-tertiary)" }}
+              >
+                For My Kids
+              </p>
+
+              <div className="poem-stanza poem-stanza-1">
+                <TypewriterLine
+                  text="A five and a four and a baby makes three."
+                  delay={300}
+                  speed={25}
+                  className="poem-line"
+                />
+                <TypewriterLine
+                  text="They climb and they pull and they hang onto me."
+                  delay={1800}
+                  speed={25}
+                  className="poem-line"
+                />
+                <TypewriterLine
+                  text="So I hang every day, decompress head to toe,"
+                  delay={3400}
+                  speed={25}
+                  className="poem-line"
+                />
+                <TypewriterLine
+                  text="So I'm ready to play wherever they go."
+                  delay={4900}
+                  speed={25}
+                  className="poem-line"
+                />
+              </div>
+
+              <div className="poem-stanza poem-stanza-2">
+                <TypewriterLine
+                  text="A bar, a branch, a doorframe will do."
+                  delay={6500}
+                  speed={25}
+                  className="poem-line"
+                />
+                <TypewriterLine
+                  text="A playground, a beam, there's always a view."
+                  delay={7800}
+                  speed={25}
+                  className="poem-line"
+                />
+                <TypewriterLine
+                  text="You can hang in the morning, you can hang in the night."
+                  delay={9300}
+                  speed={25}
+                  className="poem-line"
+                />
+                <TypewriterLine
+                  text="You can hang for a minute and you'll feel just right."
+                  delay={11200}
+                  speed={25}
+                  className="poem-line"
+                  onComplete={handlePoemComplete}
+                />
+              </div>
+
+              {/* Tagline appears after poem completes */}
+              <p
+                className={`poem-tagline ${poemComplete ? "poem-tagline-visible" : ""}`}
+              >
+                I hang for them so I can hang with them.
+              </p>
+            </div>
+
+            {/* Swipe to close hint */}
+            <p className="poem-hint">swipe down or tap outside to close</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
