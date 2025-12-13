@@ -6,13 +6,13 @@ import { useState } from "react";
 
 // Zone data for the showcase
 const zones = [
-  { num: 1, name: "Grip", color: "var(--zone-1-grip)", dark: true },
-  { num: 2, name: "Hold", color: "var(--zone-2-hold)", dark: true },
-  { num: 3, name: "Hang", color: "var(--zone-3-hang)", dark: false },
-  { num: 4, name: "Flow", color: "var(--zone-4-flow)", dark: false },
-  { num: 5, name: "Forge", color: "var(--zone-5-forge)", dark: false },
-  { num: 6, name: "Fire", color: "var(--zone-6-fire)", dark: false },
-  { num: 7, name: "Legend", color: "var(--zone-7-legend)", dark: true },
+  { num: 1, name: "Grip", color: "var(--zone-1-grip)" },
+  { num: 2, name: "Hold", color: "var(--zone-2-hold)" },
+  { num: 3, name: "Hang", color: "var(--zone-3-hang)" },
+  { num: 4, name: "Flow", color: "var(--zone-4-flow)" },
+  { num: 5, name: "Forge", color: "var(--zone-5-forge)" },
+  { num: 6, name: "Fire", color: "var(--zone-6-fire)" },
+  { num: 7, name: "Legend", color: "var(--zone-7-legend)" },
 ];
 
 // Features data
@@ -267,15 +267,16 @@ export default function Home() {
               className="text-lg leading-relaxed mb-5"
               style={{ color: "var(--text-secondary)" }}
             >
-              In college, I was hit by a car on my Honda Spree. My back took
-              damage I wouldn&apos;t feel for years.
+              Me on an &apos;86 Honda Spree riding to class vs. a Prius who
+              doesn&apos;t see me. The Prius won. I walked away thinking I was
+              fine. My back waited until I had three kids climbing all over me
+              to prove me wrong.
             </p>
             <p
               className="text-lg leading-relaxed mb-5"
               style={{ color: "var(--text-secondary)" }}
             >
-              Not until I had three kids who wanted to climb all over me. The
-              days I hang for a minute or more,{" "}
+              The days I hang for a minute or more,{" "}
               <span style={{ color: "var(--gold)" }} className="font-medium">
                 I feel better. I move better. I can be there for them.
               </span>
@@ -322,18 +323,20 @@ export default function Home() {
           Progress you can feel
         </h2>
         <p
-          className="text-lg mb-12"
+          className="text-lg mb-12 max-w-2xl mx-auto"
           style={{ color: "var(--text-secondary)" }}
         >
-          Seven zones from first grip to legend status. Watch your progress bar
-          light up.
+          One hang won&apos;t fix your back. But one hang a day, stacked over
+          weeks? That&apos;s compound interest. And healthy habits have a way of
+          spreading. One good choice makes the next one easier. Seven zones from
+          first grip to legend status. Watch the streak build.
         </p>
 
         <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8">
           {zones.map((zone) => (
             <div
               key={zone.num}
-              className={`zone-block ${zone.dark ? "zone-block-dark" : ""}`}
+              className="zone-block"
               style={{ background: zone.color }}
             >
               <span className="zone-num">{zone.num}</span>

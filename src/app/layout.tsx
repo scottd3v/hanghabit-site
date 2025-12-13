@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     images: ["/og-hang-habit.png"],
   },
   other: {
-    "theme-color": "#0c1220",
+    "theme-color": "#000000",
   },
 };
 
@@ -68,6 +68,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Apple Touch Icon */}
+        <link rel="apple-touch-icon" href="/hang-habit-icon-180.png" />
+
+        {/* Apple Smart App Banner - uncomment when app is live */}
+        {/* <meta name="apple-itunes-app" content="app-id=YOUR_APP_ID" /> */}
+
+        {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
